@@ -13,7 +13,7 @@
     "axios": "^1.7.9"
   },
   "devDependencies": {
-    "vitest": "^3.0.4",
-    "@repo/typescript-config": "*"
+    "@repo/typescript-config": "*",
+    "vitest": "^3.0.4"
   }
 }

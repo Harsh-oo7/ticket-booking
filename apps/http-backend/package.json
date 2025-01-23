@@ -1,15 +1,24 @@
 {
-  "name": "http-backend",
+  "name": "@repo/http-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -b",
+    "start": "NODE_ENV=production node dist/index.js",
+    "dev": "npm run build && NODE_ENV=development node dist/index.js"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspaces:*"
+    "@repo/typescript-config": "*"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@types/authenticator": "^1.1.4",
+    "@types/express": "^5.0.0",
+    "authenticator": "^1.1.5",
+    "express": "^4.21.2"
+  }
 }
