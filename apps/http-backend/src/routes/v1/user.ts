@@ -1,14 +1,14 @@
-import { generateToken, verifyToken } from "authenticator";
 import { Router } from "express";
-import { client } from "@repo/db/client";
+const { client } = require("@repo/db/client");
 import jwt from 'jsonwebtoken'
 import { JWT_PASSWORD } from "../../config";
+import { getTOTP, verifyTOTP } from "../../utils/totp";
 
 const router = Router();
 
 router.post("/signup", async (req, res) => {
     const phoneNumber = req.body.phoneNumber;
-    const totp = generateToken(phoneNumber + 'SIGNUP');
+    const totp = getTOTP(phoneNumber, 'SIGNUP');
     console.log("totp========>", totp);
 
     // send otp to phoneNumber
@@ -36,12 +36,12 @@ router.post("/signup/verify", async (req, res) => {
     const phoneNumber = req.body.phoneNumber;
     const name = req.body.name;
 
-    if(process.env.NODE_ENV === 'production' && !verifyToken(phoneNumber + 'SIGNUP', req.body.otp)) {
+    if(process.env.NODE_ENV === 'production' && !verifyTOTP(phoneNumber, req.body.otp, 'SIGNUP')) {
         res.status(401).send('Invalid OTP');
         return;
     }
 
-    const userId = await client.user.update({
+    const user = await client.user.update({
         where: {
             number: phoneNumber
         },
@@ -52,7 +52,39 @@ router.post("/signup/verify", async (req, res) => {
     })
 
     const token = jwt.sign({
-        userId
+        userId: user.id
+    }, JWT_PASSWORD)
+
+    res.json({
+        token
+    })
+})
+
+router.post("/signin", async (req, res) => {
+    const phoneNumber = req.body.phoneNumber;
+    const totp = getTOTP(phoneNumber, 'SIGNIN');
+    console.log("totp========>", totp);
+
+    res.json({
+        message: "OTP sent"
+    })
+})
+
+router.post("/signin/verify", async (req, res) => {
+    const number = req.body.phoneNumber;
+    if(process.env.NODE_ENV === 'production' && !verifyTOTP(number, req.body.otp, 'SIGNIN')) {
+        res.status(401).send('Invalid OTP');
+        return;
+    }
+
+    const user = await client.user.findFirst({
+        where: {
+            number
+        }
+    })
+
+    const token = jwt.sign({
+        userId: user.id
     }, JWT_PASSWORD)
 
     res.json({
