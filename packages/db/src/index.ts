@@ -4,8 +4,9 @@
 
 // export { client };
 
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient, AdminType : PrismaAdminTypeStr } = require("@prisma/client");
 
 const client = new PrismaClient();
 
-module.exports = { client };
+
+module.exports = { client, AdminType: PrismaAdminTypeStr };

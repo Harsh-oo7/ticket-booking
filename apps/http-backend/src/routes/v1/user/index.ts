@@ -1,8 +1,8 @@
 import { Router } from "express";
 const { client } = require("@repo/db/client");
 import jwt from 'jsonwebtoken'
-import { JWT_PASSWORD } from "../../config";
-import { getTOTP, verifyTOTP } from "../../utils/totp";
+import { JWT_PASSWORD } from "../../../config";
+import { getTOTP, verifyTOTP } from "../../../utils/totp";
 
 const router = Router();
 

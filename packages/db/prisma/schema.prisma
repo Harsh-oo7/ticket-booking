@@ -28,6 +28,7 @@ model Admin {
   name String
   verified Boolean @default(false)
   events Event[]
+  type AdminType
 }
 
 model Event {
@@ -39,6 +40,17 @@ model Event {
   admin Admin @relation(fields: [adminId], references: [id])
   bookings Booking[]
   payments Payment[]
+  startTime DateTime
+  locationId String
+  location Location @relation(fields: [locationId], references: [id])
+}
+
+model Location {
+  id String @id @default(uuid())
+  name String
+  description String
+  imageURL String
+  event Event[]
 }
 
 model Booking {
@@ -83,3 +95,7 @@ enum PaymentStatus {
   Pending
 }
 
+enum AdminType {
+  SuperAdmin
+  Creator
+}
